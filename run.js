@@ -1,5 +1,7 @@
 import { Player, Enemy } from './player.js';
 import { Displayer } from './displayer.js';
+import * as readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
 
 class Location {
   constructor(name) {
@@ -47,20 +49,43 @@ const lib = {
   ],
 }
 
-function run(){
+async function run(){
+  const rl = readline.createInterface({ input, output });
   const game = new Game();
   const player = new Player("小明", 5, 5, 5, 10, 0);
 
+  console.log(`你是 ${player.name}，你要解决一堆习题`);
+
+  const spend_map = {'a': 1, 'b': 3, 'c': 5, 'd': 9};
+
   const es = lib.enemies;
   for (const e of es) {
-    while (e.content > 0 && player.stamina > 0) {
-      var result = game.battle(player, e, 3);
+    Displayer.enemy(e);
+    while (e.content > 0) {
+      if (player.stamina <= 0) {
+        console.log("精力都花光了，作业没做完");
+        process.exit(0);
+      }
+
+      var s = null;
+      while(!s) {
+        const r = await rl.question(`选择需要投入的精力：${JSON.stringify(spend_map)}\n`);
+        s = spend_map[r];
+        if (!s) {
+          console.log("无效的选择");
+          continue;
+        }
+      }
+
+      var result = game.battle(player, e, s);
       console.log("");
-      console.log(`当前面对：${e.name}，做出来了吗？ ${result}，剩余内容: ${e.content}`);
+      const msg = result ? "做出来了" : "没做出来";
+      console.log(`投入精力：${s}，${msg}，剩余内容: ${e.content}`);
       Displayer.player(player);
     }
   }
-
+  console.log("作业都做完了");
+  rl.close();
 }
 
 run()
