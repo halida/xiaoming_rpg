@@ -1,8 +1,26 @@
 import { Player } from './player.js';
 
-const player = new Player();
+class Location {
+  constructor(name) {
+    this.name = name;
+  }
+}
 
-console.log('Player Attributes:');
-console.log(`  Name: ${player.name}`);
-console.log(`  HP: ${player.hp}`);
-console.log(`  MP: ${player.mp}`);
+class Game {
+  constructor() {
+    this.location = new Location("家");
+    this.day = 1;
+  }
+}
+
+function run(){
+  const player = new Player();
+
+  const Game = new Game();
+
+  console.log('Player Attributes:');
+  console.log(`  Name: ${player.name}`);
+  console.log(`  HP: ${player.hp}`);
+  console.log(`  MP: ${player.mp}`);
+
+}
