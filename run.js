@@ -1,4 +1,5 @@
 import { Player } from './player.js';
+import { Displayer } from './displayer.js';
 
 class Location {
   constructor(name) {
@@ -15,12 +16,7 @@ class Game {
 
 function run(){
   const player = new Player();
-
-  const Game = new Game();
-
-  console.log('Player Attributes:');
-  console.log(`  Name: ${player.name}`);
-  console.log(`  HP: ${player.hp}`);
-  console.log(`  MP: ${player.mp}`);
-
+  Displayer.player(player);
 }
+
+run()
