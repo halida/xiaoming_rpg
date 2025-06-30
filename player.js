@@ -7,11 +7,13 @@ export class Life {
 export class Player extends Life {
   constructor(name, knowledge, reflex, thinking, stamina, exp){
     super("小明");
+    this.level = 1;
     this.knowledge = knowledge;
     this.reflex = reflex;
     this.thinking = thinking;
     this.stamina = stamina;
     this.exp = exp;
+    this.nextLevelExp = 6;
   }
 }
 

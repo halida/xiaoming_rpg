@@ -10,6 +10,14 @@ class Location {
   }
 }
 
+const lib = {
+  attributes: {
+    "知识": "knowledge",
+    "反应": "reflex",
+    "思考": "thinking",
+  },
+}
+
 class Game {
   constructor(rl) {
     this.rl = rl;
@@ -24,9 +32,9 @@ class Game {
       new Location("小学", {
         "学习": async function(){
           const es = [
-            new Enemy("小学数学习题", 3, 2, 3, 2, 3),
-            new Enemy("小学语文习题", 2, 3, 3, 2, 3),
-            new Enemy("小学英语习题", 3, 3, 2, 2, 3),
+            new Enemy("小学数学习题", 3, 2, 3, 2, 30),
+            new Enemy("小学语文习题", 2, 3, 3, 2, 30),
+            new Enemy("小学英语习题", 3, 3, 2, 2, 30),
           ];
           await this.solving(es);
         }}),
@@ -48,16 +56,36 @@ class Game {
         (this.dice(20) + add + player.thinking >= 10 + enemy.skill));
   }
 
-  battle(player, enemy, spend) {
+  async battle(player, enemy, spend) {
     player.stamina -= spend;
     const solved = this.checkSolve(player, enemy, spend);
     if (solved) {
-      enemy.content --;
+      enemy.content--;
       if (enemy.content <= 0) {
         player.exp += enemy.exp;
+        await this.checkForLevelUp(player);
       }
     }
     return solved;
+  }
+
+  async checkForLevelUp(player) {
+    while (player.exp >= player.nextLevelExp) {
+      player.level++;
+      player.exp -= player.nextLevelExp;
+      player.nextLevelExp = Math.floor(player.nextLevelExp * 1.5);
+      console.log(`\n恭喜 ${player.name} 升到了 ${player.level} 级!`);
+      await this.upgradeAttribute(player);
+    }
+  }
+
+  async upgradeAttribute(player) {
+    const attributes = Object.keys(lib.attributes);
+    const choice = await this.choose("选择一个属性来升级", attributes);
+
+    player[lib.attributes[choice]]++;
+    console.log(`\n${player.name}的 ${choice} 提升了!`);
+    Displayer.player(player);
   }
 
   async run() {
