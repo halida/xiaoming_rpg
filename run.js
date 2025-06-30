@@ -92,35 +92,51 @@ class Game {
     while(true) {
       console.log(`\n你是 ${this.player.name}，你在 ${this.location.name}`);
       Displayer.player(this.player);
+
       const ops = this.location.ops;
-      const opNames = Object.keys(ops);
-      const choices = [...opNames, "移动"];
+      const choices = ["移动", "升级", ...Object.keys(ops)];
       const chosenOp = await this.choose("选择操作", choices);
 
-      if (chosenOp === "移动") {
-        const moves = this.locations.filter(l => l.name !== this.location.name).map(l => l.name);
-
-        if (moves.length === 0) {
-            console.log("没有其他地方可以去。");
-            continue;
-        }
-
-        const chosenLocName = await this.choose("移动到", moves);
-        this.location = this.locations.find((l) => l.name === chosenLocName);
-      } else {
+      switch(chosenOp) {
+      case "移动":
+        await this.move();
+        break;
+      case "升级":
+        this.player.exp += 15;
+        await this.checkForLevelUp(this.player);
+        break;
+      default:
         await ops[chosenOp].call(this);
       }
     }
+}
+
+  async move() {
+    const moves = this.locations.
+          filter(l => l.name !== this.location.name).
+          map(l => l.name);
+
+    if (moves.length === 0) {
+      console.log("没有其他地方可以去。");
+      return;
+    }
+
+    const chosenLocName = await this.choose("移动到", moves);
+    this.location = this.locations.find(
+      (l) => l.name === chosenLocName);
   }
 
   async choose(prompt, list) {
     const mapping = {}
     list.forEach((c, i) => mapping[i+1] = c);
+    const choicesText = Object.entries(mapping).
+          map(([key, value]) => `${key}:${value}`).
+          join(', ');
 
     var s = null;
     while(s === null) {
       const r = await this.rl.question(
-        `${prompt}：${JSON.stringify(mapping)}\n`);
+        `${ prompt }\t${ choicesText }\n`);
       s = mapping[r];
       if (s === undefined) {
         console.log("无效的选择");
