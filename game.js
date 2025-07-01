@@ -1,4 +1,4 @@
-import { Player, Enemy } from './life.js';
+import { MainScene } from './scene.js';
 
 const lib = {
   attributes: {
@@ -8,36 +8,10 @@ const lib = {
   },
 }
 
-class Location {
-  constructor(name, ops) {
-    this.name = name;
-    this.ops = ops;
-  }
-}
-
 export class Game {
   constructor(ui) {
     this.ui = ui;
-    this.player = new Player("小明", 5, 5, 5, 30, 0);
-
-    this.locations = [
-      new Location("家", {
-        "休息": function(){
-          this.player.stamina = 30;
-          this.ui.log("休息好了");
-        }}),
-      new Location("小学", {
-        "学习": async function(){
-          const es = [
-            new Enemy("小学数学习题", 3, 2, 3, 2, 30),
-            new Enemy("小学语文习题", 2, 3, 3, 2, 30),
-            new Enemy("小学英语习题", 3, 3, 2, 2, 30),
-          ];
-          await this.solving(es);
-        }}),
-    ];
-    this.location = this.locations[0];
-    this.day = 1;
+    MainScene.load(this);
   }
 
   dice(n) {
@@ -91,16 +65,12 @@ export class Game {
       this.ui.player(this.player);
 
       const ops = this.location.ops;
-      const choices = ["移动", "升级", ...Object.keys(ops)];
+      const choices = ["移动", ...Object.keys(ops)];
       const chosenOp = await this.choose("选择操作", choices);
 
       switch(chosenOp) {
       case "移动":
         await this.move();
-        break;
-      case "升级":
-        this.player.exp += 15;
-        await this.checkForLevelUp(this.player);
         break;
       default:
         await ops[chosenOp].call(this);
