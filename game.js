@@ -1,17 +1,24 @@
 import { MainScene } from './scene.js';
-
-const lib = {
-  attributes: {
-    "知识": "knowledge",
-    "反应": "reflex",
-    "思考": "thinking",
-  },
-}
+import { lib } from './lib.js';
 
 export class Game {
   constructor(ui) {
     this.ui = ui;
     MainScene.load(this);
+  }
+
+  save() {
+    return {
+      player: this.player,
+      location: this.location.name,
+      day: this.day,
+    }
+  }
+
+  load(data) {
+    this.player = data.player;
+    this.location = this.locations.find(l => l.name === data.location);
+    this.day = data.day;
   }
 
   dice(n) {
@@ -65,13 +72,21 @@ export class Game {
       this.ui.player(this.player);
 
       const ops = this.location.ops;
-      const choices = ["移动", ...Object.keys(ops)];
+      const choices = ["移动", "保存", "读取", "退出", ...Object.keys(ops)];
       const chosenOp = await this.choose("选择操作", choices);
 
       switch(chosenOp) {
       case "移动":
         await this.move();
         break;
+      case "保存":
+        this.ui.save(this.save());
+        break;
+      case "读取":
+        this.load(this.ui.load());
+        break;
+      case "退出":
+        return;
       default:
         await ops[chosenOp].call(this);
       }
