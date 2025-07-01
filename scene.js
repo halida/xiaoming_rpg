@@ -62,10 +62,53 @@ export class MainScene {
           ];
           await game.solving(es);
         },
+        "高考": async function(){
+          const es = [
+            new Enemy("高考数学", 8, 6, 8, 4, 100),
+            new Enemy("高考语文", 6, 8, 8, 4, 100),
+            new Enemy("高考英语", 8, 8, 6, 4, 100),
+          ];
+          const result = await game.solving(es);
+          if (result) {
+            game.ui.log("高考成功！");
+            game.locations.find(l => l.name === "大学").enabled = true;
+          }
+        },
+      }, false),
+      new Location("大学", {
+        "学习": async function(){
+          const es = [
+            new Enemy("高数", 12, 10, 12, 5, 100),
+            new Enemy("线代", 10, 12, 12, 5, 100),
+            new Enemy("英语", 12, 12, 10, 5, 100),
+          ];
+          await game.solving(es);
+        },
+        "毕业": async function(){
+          const es = [
+            new Enemy("毕业论文", 15, 15, 15, 1, 500),
+          ];
+          const result = await game.solving(es);
+          if (result) {
+            game.ui.log("毕业成功！");
+            game.locations.find(l => l.name === "工作").enabled = true;
+          }
+        },
+      }, false),
+      new Location("工作", {
+        "上班": async function(){
+          const es = [
+            new Enemy("老板的PUA", 20, 20, 20, 10, 1000),
+          ];
+          const result = await game.solving(es);
+          if (result) {
+            game.ui.log("你战胜了老板！游戏通关！");
+            game.ui.end();
+          }
+        },
       }, false),
     ];
     game.location = game.locations[0];
     game.day = 1;
-
   }
 }

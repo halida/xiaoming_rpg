@@ -49,6 +49,10 @@ export class CliUi {
     return s;
   }
 
+  end() {
+    process.exit(0);
+  }
+
   close() {
     this.rl.close();
   }
