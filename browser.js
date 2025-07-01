@@ -87,9 +87,17 @@ class GameScene extends Phaser.Scene {
 
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: "100%",
+  height: "100%",
+  scale: {
+    mode: Phaser.Scale.ENVELOP,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
   scene: GameScene,
 };
 
 const game = new Phaser.Game(config);
+
+window.addEventListener('resize', () => {
+  game.scale.refresh();
+});
