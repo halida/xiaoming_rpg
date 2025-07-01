@@ -1,8 +1,13 @@
 import * as readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
 
+import { Displayer } from './displayer.js';
+
 export class CliUi {
   constructor(rl) {
+    this.log = console.log;
+    this.player = Displayer.player;
+    this.enemy = Displayer.enemy;
     this.rl = readline.createInterface({ input, output });
   }
 
