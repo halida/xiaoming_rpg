@@ -1,12 +1,9 @@
-import * as readline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
-
-import { Displayer } from './displayer.js';
 import { Game } from './game.js';
+import { CliUi } from './cli_ui.js';
 
 async function run(){
-  const rl = readline.createInterface({ input, output });
-  const game = new Game(rl);
+  const ui = new CliUi();
+  const game = new Game(ui);
 
   await game.run();
 

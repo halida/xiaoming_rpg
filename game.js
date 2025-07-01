@@ -17,8 +17,8 @@ class Location {
 }
 
 export class Game {
-  constructor(rl) {
-    this.rl = rl;
+  constructor(ui) {
+    this.ui = ui;
     this.player = new Player("小明", 5, 5, 5, 30, 0);
 
     this.locations = [
@@ -107,7 +107,7 @@ export class Game {
         await ops[chosenOp].call(this);
       }
     }
-}
+  }
 
   async move() {
     const moves = this.locations.
@@ -125,23 +125,7 @@ export class Game {
   }
 
   async choose(prompt, list) {
-    const mapping = {}
-    list.forEach((c, i) => mapping[i+1] = c);
-    const choicesText = Object.entries(mapping).
-          map(([key, value]) => `${key}:${value}`).
-          join(', ');
-
-    var s = null;
-    while(s === null) {
-      const r = await this.rl.question(
-        `${ prompt }\t${ choicesText }\n`);
-      s = mapping[r];
-      if (s === undefined) {
-        console.log("无效的选择");
-        s = null;
-      }
-    }
-    return s;
+    return await this.ui.choose(prompt, list);
   }
 
   async solving(es) {
