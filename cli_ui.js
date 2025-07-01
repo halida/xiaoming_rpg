@@ -50,10 +50,6 @@ export class CliUi {
   }
 
   end() {
-    process.exit(0);
-  }
-
-  close() {
     this.rl.close();
   }
 }

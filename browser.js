@@ -35,6 +35,10 @@ class BrowserUi {
 `;
     this.scene.showEnemy(text);
   }
+
+  end() {
+    this.scene.log("游戏结束");
+  }
 }
 
 class GameScene extends Phaser.Scene {

@@ -6,8 +6,7 @@ async function main() {
   const ui = new CliUi();
   const game = new Game(ui);
   await game.run();
-
-  ui.close();
+  ui.end();
 }
 
 main();

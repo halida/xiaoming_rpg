@@ -106,6 +106,10 @@ export class MainScene {
             game.ui.end();
           }
         },
+        "辞职": async function() {
+          game.ui.log("你辞职了，游戏结束！");
+          game.ui.end();
+        }
       }, false),
     ];
     game.location = game.locations[0];

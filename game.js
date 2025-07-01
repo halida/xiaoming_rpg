@@ -91,7 +91,8 @@ export class Game {
 
   async loop() {
     while(true) {
-      this.ui.log(`\n你是 ${this.player.name}，你在 ${this.location.name}`);
+      this.ui.log(`
+你是 ${this.player.name}，你在 ${this.location.name}`);
       this.ui.player(this.player);
       this.ui.save(this.save());
 
@@ -104,6 +105,7 @@ export class Game {
         await this.move();
         break;
       case "退出":
+        this.ui.end();
         return;
       default:
         await ops[chosenOp].call(this);
