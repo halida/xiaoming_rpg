@@ -3,10 +3,9 @@ import { CliUi } from './cli_ui.js';
 import { Displayer } from './displayer.js';
 
 const ui = new CliUi();
-const displayer = {
-  log: console.log,
-  player: Displayer.player,
-  enemy: Displayer.enemy,
-};
-const game = new Game(ui, displayer);
+ui.log = console.log;
+ui.player = Displayer.player;
+ui.enemy = Displayer.enemy;
+
+const game = new Game(ui);
 game.run();

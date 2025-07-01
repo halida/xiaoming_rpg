@@ -13,12 +13,6 @@ class BrowserUi {
       });
     });
   }
-}
-
-class BrowserDisplayer {
-  constructor(scene) {
-    this.scene = scene;
-  }
 
   log(message) {
     this.scene.log(message);
@@ -56,8 +50,7 @@ class GameScene extends Phaser.Scene {
     this.choicesText = this.add.text(10, 330, '', { fill: '#0f0' });
 
     const ui = new BrowserUi(this);
-    const displayer = new BrowserDisplayer(this);
-    this.game = new Game(ui, displayer);
+    this.game = new Game(ui);
     this.game.run();
   }
 
