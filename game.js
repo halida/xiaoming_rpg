@@ -16,7 +16,7 @@ export class Game {
   }
 
   load(data) {
-    this.player = data.player;
+    Object.assign(this.player, data.player);
     this.location = this.locations.find(l => l.name === data.location);
     this.day = data.day;
   }

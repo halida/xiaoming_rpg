@@ -12,7 +12,7 @@ async function main() {
       await game.run();
       break;
     case "读取存档":
-      game.load('save.json');
+      game.load(ui.load());
       await game.run();
       break;
     case "退出":
