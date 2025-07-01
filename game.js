@@ -81,8 +81,11 @@ export class Game {
       await this.loop();
       break;
     case "读取存档":
-      this.load(this.ui.load());
-      await this.loop();
+      const data = this.ui.load();
+      if (data) {
+        this.load(data);
+        await this.loop();
+      }
       break;
     case "退出":
       break;

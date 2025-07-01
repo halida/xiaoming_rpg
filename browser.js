@@ -39,6 +39,19 @@ class BrowserUi {
   end() {
     this.scene.log("游戏结束");
   }
+
+  save(data) {
+    localStorage.setItem('rpg_save', JSON.stringify(data));
+  }
+
+  load() {
+    const data = localStorage.getItem('rpg_save');
+    if (data) {
+      return JSON.parse(data);
+    }
+    this.log("没有找到存档");
+    return null;
+  }
 }
 
 class GameScene extends Phaser.Scene {
@@ -71,6 +84,7 @@ class GameScene extends Phaser.Scene {
   }
 
   showChoices(prompt, choices) {
+    // console.log("showChoices", prompt, choices);
     this.promptText.setText(prompt);
     this.choicesText.setText(choices.map((c, i) => `${i + 1}: ${c}`).join('\n'));
     this.input.keyboard.off('keydown');
