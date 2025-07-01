@@ -1,5 +1,4 @@
 import { Player, Enemy } from './life.js';
-import { Displayer } from './displayer.js';
 
 const lib = {
   attributes: {
@@ -17,15 +16,16 @@ class Location {
 }
 
 export class Game {
-  constructor(ui) {
+  constructor(ui, displayer) {
     this.ui = ui;
+    this.displayer = displayer;
     this.player = new Player("小明", 5, 5, 5, 30, 0);
 
     this.locations = [
       new Location("家", {
         "休息": function(){
           this.player.stamina = 30;
-          console.log("休息好了");
+          this.displayer.log("休息好了");
         }}),
       new Location("小学", {
         "学习": async function(){
@@ -72,7 +72,7 @@ export class Game {
       player.level++;
       player.exp -= player.nextLevelExp;
       player.nextLevelExp = Math.floor(player.nextLevelExp * 1.5);
-      console.log(`\n恭喜 ${player.name} 升到了 ${player.level} 级!`);
+      this.displayer.log(`\n恭喜 ${player.name} 升到了 ${player.level} 级!`);
       await this.upgradeAttribute(player);
     }
   }
@@ -82,14 +82,14 @@ export class Game {
     const choice = await this.choose("选择一个属性来升级", attributes);
 
     player[lib.attributes[choice]]++;
-    console.log(`\n${player.name}的 ${choice} 提升了!`);
-    Displayer.player(player);
+    this.displayer.log(`\n${player.name}的 ${choice} 提升了!`);
+    this.displayer.player(player);
   }
 
   async run() {
     while(true) {
-      console.log(`\n你是 ${this.player.name}，你在 ${this.location.name}`);
-      Displayer.player(this.player);
+      this.displayer.log(`\n你是 ${this.player.name}，你在 ${this.location.name}`);
+      this.displayer.player(this.player);
 
       const ops = this.location.ops;
       const choices = ["移动", "升级", ...Object.keys(ops)];
@@ -115,7 +115,7 @@ export class Game {
           map(l => l.name);
 
     if (moves.length === 0) {
-      console.log("没有其他地方可以去。");
+      this.displayer.log("没有其他地方可以去。");
       return;
     }
 
@@ -132,21 +132,21 @@ export class Game {
     const spends = [1,3,5,9];
 
     for (const e of es) {
-      Displayer.enemy(e);
+      this.displayer.enemy(e);
       while (e.content > 0) {
         if (this.player.stamina <= 0) {
-          console.log("精力都花光了，作业没做完");
+          this.displayer.log("精力都花光了，作业没做完");
           return;
         }
         const s = await this.choose("选择需要投入的精力", spends);
 
         var result = this.battle(this.player, e, s);
-        console.log("");
+        this.displayer.log("");
         const msg = result ? "做出来了" : "没做出来";
-        console.log(`投入精力：${s}，${msg}，剩余内容: ${e.content}`);
-        Displayer.player(this.player);
+        this.displayer.log(`投入精力：${s}，${msg}，剩余内容: ${e.content}`);
+        this.displayer.player(this.player);
       }
     }
-    console.log("作业都做完了");
+    this.displayer.log("作业都做完了");
   }
 }
