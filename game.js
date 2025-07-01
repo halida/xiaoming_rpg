@@ -67,23 +67,34 @@ export class Game {
   }
 
   async run() {
+    const choice = await this.ui.choose("选择操作", ["新游戏", "读取存档", "退出"]);
+
+    switch (choice) {
+    case "新游戏":
+      await this.loop();
+      break;
+    case "读取存档":
+      this.load(this.ui.load());
+      await this.loop();
+      break;
+    case "退出":
+      break;
+    }
+  }
+
+  async loop() {
     while(true) {
       this.ui.log(`\n你是 ${this.player.name}，你在 ${this.location.name}`);
       this.ui.player(this.player);
+      this.ui.save(this.save());
 
       const ops = this.location.ops;
-      const choices = ["移动", "保存", "读取", "退出", ...Object.keys(ops)];
+      const choices = ["移动", ...Object.keys(ops), "退出"];
       const chosenOp = await this.choose("选择操作", choices);
 
       switch(chosenOp) {
       case "移动":
         await this.move();
-        break;
-      case "保存":
-        this.ui.save(this.save());
-        break;
-      case "读取":
-        this.load(this.ui.load());
         break;
       case "退出":
         return;
@@ -133,4 +144,5 @@ export class Game {
     }
     this.ui.log("作业都做完了");
   }
+
 }

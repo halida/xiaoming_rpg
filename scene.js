@@ -25,9 +25,9 @@ export class MainScene {
       new Location("小学", {
         "学习": async function(){
           const es = [
-            new Enemy("小学数学习题", 3, 2, 3, 2, 30),
-            new Enemy("小学语文习题", 2, 3, 3, 2, 30),
-            new Enemy("小学英语习题", 3, 3, 2, 2, 30),
+            new Enemy("小学数学习题", 2, 1, 2, 1, 10),
+            new Enemy("小学语文习题", 1, 2, 2, 1, 10),
+            new Enemy("小学英语习题", 2, 2, 1, 1, 10),
           ];
           await game.solving(es);
         }}),
