@@ -11,6 +11,7 @@ export class Game {
     return {
       player: this.player,
       location: this.location.name,
+      location_enabled: this.locations.map(l => [l.name, l.enabled]),
       day: this.day,
     }
   }
@@ -18,6 +19,12 @@ export class Game {
   load(data) {
     Object.assign(this.player, data.player);
     this.location = this.locations.find(l => l.name === data.location);
+    const game = this;
+    data.location_enabled.map(function(d) {
+      const name = d[0];
+      const enabled = d[1];
+      game.locations.find(l => l.name === name).enabled = enabled;
+    });
     this.day = data.day;
   }
 
@@ -106,7 +113,7 @@ export class Game {
 
   async move() {
     const moves = this.locations.
-          filter(l => l.name !== this.location.name).
+          filter(l => l.enabled && l.name !== this.location.name).
           map(l => l.name);
 
     if (moves.length === 0) {
@@ -131,7 +138,7 @@ export class Game {
       while (e.content > 0) {
         if (this.player.stamina <= 0) {
           this.ui.log("精力都花光了，作业没做完");
-          return;
+          return false;
         }
         const s = await this.choose("选择需要投入的精力", spends);
 
@@ -143,6 +150,7 @@ export class Game {
       }
     }
     this.ui.log("作业都做完了");
+    return true;
   }
 
 }
